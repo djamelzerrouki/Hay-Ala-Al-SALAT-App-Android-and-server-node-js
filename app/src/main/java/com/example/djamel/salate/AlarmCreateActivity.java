@@ -30,7 +30,7 @@ public class AlarmCreateActivity extends Activity {
 		// Create PendingIntent to start the AlarmNotificationReceiver
 		mNotificationReceiverIntent = new Intent(AlarmCreateActivity.this,
 				AlarmNotificationReceiver.class);
-		mNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
+ 		mNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
 				AlarmCreateActivity.this, 0, mNotificationReceiverIntent, 0);
 
 
@@ -43,7 +43,7 @@ public class AlarmCreateActivity extends Activity {
 						System.currentTimeMillis() + INITIAL_ALARM_DELAY,
 						mNotificationReceiverPendingIntent);
 
-
+				mAlarmManager.cancel(mNotificationReceiverPendingIntent);
 				Toast.makeText(getApplicationContext(), "Single Alarm Set",
 						Toast.LENGTH_LONG).show();
 			}

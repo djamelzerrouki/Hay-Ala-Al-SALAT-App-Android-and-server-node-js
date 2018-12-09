@@ -22,7 +22,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="30dp"
         android:scaleType="center"
-        android:src="@drawable/logonaftal" />
+        android:src="@drawable/salat" />
 
     <ScrollView
         android:id="@+id/scrollView"

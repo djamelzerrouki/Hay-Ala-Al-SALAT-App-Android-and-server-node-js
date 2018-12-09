@@ -4,15 +4,25 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
  import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import  android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
@@ -31,36 +41,32 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 public class Home extends AppCompatActivity {
+
+   //my Socket
     private Socket mSocket;
-    Switch aSwitch;
-      AlarmManager mAlarmManager;
-      Intent mNotificationReceiverIntent ;
-      PendingIntent mNotificationReceiverPendingIntent ;
-    private static final long INITIAL_ALARM_DELAY =  10 * 1000L;
-public static String h1=null;
 
-    public   int[] getTimeOfCalander(String h){
-       if (h!=null){
-        String[] tokens = h.split(":");       // Single blank is the separator.
-        int[] index = new int[tokens.length];
-        int i=0;
-        for (String val : tokens) {
-            index[i] =Integer.parseInt(val);
-            //	System.out.println(index[i]);
-            i++;
+    // AlarmManager public
+       AlarmManager mAlarmManager;
 
-        }
-           return index;
-       }else{
-           Toast.makeText(this,"la reqet et vide ",Toast.LENGTH_LONG).show();
-           return null;
-       }
-    }
+       // Intent pour notification d'alarm
+      Intent mNotificationReceiverIntent;
 
+      // PendingIntent pour notification d'alarm
+ PendingIntent mNotificationReceiverPendingIntent ;
+  // ListView la liste de  5 aw9at de salawat  [ sobh dohr 3asr marrab icha ]
+    public static ListView ls;
+
+    // pour chaque items de la list ls
+    ArrayList<ListItem> Items=new ArrayList<ListItem>();
+
+     // public static les Noms de 5 salawat  de h{1..5} qui represont le tomps  wa9t kol salat " kol h{1..5}"
+public static String h1=null,h2=null,h3=null,h4=null,h5=null;
+// onCreate Method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        ls=(ListView) findViewById(R.id.listView);
 
         // Get the AlarmManager Service
         mAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -68,58 +74,10 @@ public static String h1=null;
         // Create PendingIntent to start the AlarmNotificationReceiver
         mNotificationReceiverIntent = new Intent(Home.this,
                 AlarmNotificationReceiver.class);
-        mNotificationReceiverPendingIntent = PendingIntent.getBroadcast(
-                Home.this, 0, mNotificationReceiverIntent, 0);
-
-
-        aSwitch=(Switch)findViewById(R.id.simpleSwitch);
-        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()  {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked) {
-                   if (h1!=null){
-                    aSwitch.setText("ON");  //To change the text near to switch
-                    Calendar calendar = Calendar.getInstance();
-                    //  calendar.setTimeInMillis(System.currentTimeMillis());
-                    int[] tab=  getTimeOfCalander(h1);
-                    calendar.set(Calendar.HOUR_OF_DAY, tab[0]);
-                    calendar.set(Calendar.MINUTE,tab[1] );
-                    calendar.set(Calendar.SECOND, tab[2]);
-
-                    mAlarmManager.set(AlarmManager.RTC_WAKEUP,
-                            calendar.getTimeInMillis(),
-                            mNotificationReceiverPendingIntent);
-                    Toast.makeText(getApplicationContext(), "Single Alarm Set",
-                            Toast.LENGTH_LONG).show();}
-                            else {
-                       aSwitch.setChecked(false);
-
-                       aSwitch.setText("OFF");
-                       Toast.makeText(getApplicationContext(),
-                               "selact date svp !", Toast.LENGTH_LONG).show();
-                   }
-                 }
-                else {
-
-
-                    aSwitch.setText("OFF");  //To change the text near to switch
-
-                    mAlarmManager.cancel(mNotificationReceiverPendingIntent);
-
-                    Toast.makeText(getApplicationContext(),
-                            "Repeating Alarms Cancelled", Toast.LENGTH_LONG).show();
-
-
-                }
-            }
-        });
-
-
-
-
-
         try {
-            mSocket = IO.socket("http://192.168.1.107:3000");
+            // 169.254.135.165
+            // 192.168.1.102
+            mSocket = IO.socket("http://192.168.101.37:3000");
             Log.e("CONNECTED", "SUCCESS");
         } catch (URISyntaxException e) {
         }
@@ -129,77 +87,223 @@ public static String h1=null;
             mSocket.connect();
     }
 
+    // input: "Action"  la Selaction de ladate de JOUR ...  popActivity
     public void getTime(View view) {
 
         FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
         PopActivity popActivity=new PopActivity();
         popActivity.show(transaction,null);
     }
+//
 
-    public  void getDatesalat(String s){
+    //
+    // Get time of 5 salawat:
+    //Apris la conection avice le server va domonder l' Action mSocket.emit("timesalat", s);
+    //   String s represonter la date " le jour  selectioner ..."
 
-
-
-        Emitter.Listener login = new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-
-                runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-
-                        JSONArray jArray = null;
-                        try {
-                            jArray = new JSONArray(args[0].toString());
-                            Toast.makeText(Home.this, "length :" , Toast.LENGTH_SHORT).show();
-
-                            if (jArray.length() > 0) {
-                                String id = null, name = null ;
-                                for (int i = 0; i < jArray.length(); i++) {
-                                    JSONObject json_data = jArray.getJSONObject(i);
-                                    id = json_data.getString("id").toString();
-                                    name = json_data.getString("jour").toString();
-                                    h1 = json_data.getString("h1").toString();
-                                    // login station =new  login(id,name,password);
-                                    // liststation.add(station);
-                                    Toast.makeText(Home.this, "Bienvenue :" + name, Toast.LENGTH_SHORT).show();
-                                }
-                                Toast.makeText(Home.this, "Bienvenue :" + h1, Toast.LENGTH_SHORT).show();
-
-
-                            } else {
-
-
-                                Toast.makeText(Home.this, "S'il te plaît essayer une autre fois!", Toast.LENGTH_SHORT).show();
-
-                            }
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                });
-
-            }
-
-        };
-
-
-        mSocket.on("Respanse_iffiest", login);
+    public  void getDatesalat(final String s){
+        Emitter.Listener list5Salawat = getListenerListTileSalatSrerverNodeJS(s);
+  // get "on" :r espons of server NODE JS
+        mSocket.on("Respanse_iffiest", list5Salawat);
+        // set "emit" : requet  of server NODE JS
         mSocket.emit("timesalat", s);
         System.out.println("######");
 
-
-
     }
 
+    @NonNull
+    private Emitter.Listener getListenerListTileSalatSrerverNodeJS(final String s) {
+        // list5Salawat Action respons for server node js after emit executer actio on
+//         mSocket.on("Respanse_iffiest", list5Salawat);
+        return new Emitter.Listener() {
+                 @Override
+                 public void call(final Object... args) {
+
+                     runOnUiThread(new Runnable() {
+
+                         @Override
+                         public void run() {
+     // la table qui  qui reterner data on format JSON
+                             JSONArray jArray = null;
+                             try {
+                                 //qui reterner data on format  JSON  et casting to String "text"...
+                                 // args item of Object in method call
+                                 jArray = new JSONArray(args[0].toString());
+      // condition if exict oen result in this data with JSON
+                                 if (jArray.length() > 0) {
+                                     String id = null, date = null ;
+                                     // Siprremer data  aven charger
+                                     Items.clear();
+                                     // for loop  to my data
+                                     for (int i = 0; i < jArray.length(); i++) {
+                                         JSONObject json_data = jArray.getJSONObject(i);
+                                         id = json_data.getString("id").toString();
+                                         date = json_data.getString("jour").toString();
+                                         h1 = json_data.getString("h1").toString();
+                                         h2 = json_data.getString("h2").toString();
+                                         h3 = json_data.getString("h3").toString();
+                                         h4= json_data.getString("h4").toString();
+                                         h5 = json_data.getString("h5").toString();
+                                         Toast.makeText(Home.this, "اليوم اللذي تم إختياره" + s, Toast.LENGTH_SHORT).show();
+                                     }
+     //                                Items.add(new ListItem("الفجر",h1,"",PendingIntent.getBroadcast(
+     //                                        Home.this, 0, mNotificationReceiverIntent, 0)));
+     //
+                                     Items.add(new ListItem("الفجر",h1,"",PendingIntent.getBroadcast(
+                                             Home.this, 1, mNotificationReceiverIntent, 0)));
+                                     Items.add(new ListItem("الظهر",h2,"",PendingIntent.getBroadcast(
+                                             Home.this, 2, mNotificationReceiverIntent, 0)));
+                                     Items.add(new ListItem("العصر",h3,"",PendingIntent.getBroadcast(
+                                             Home.this, 3, mNotificationReceiverIntent, 0)));
+                                     Items.add(new ListItem("المغرب",h4,"",PendingIntent.getBroadcast(
+                                             Home.this, 4, mNotificationReceiverIntent, 0)));
+                                     Items.add(new ListItem("العشاء",h5,"",PendingIntent.getBroadcast(
+                                             Home.this, 5, mNotificationReceiverIntent, 0)));
+
+                                     // Remplir  la liste de Items la ListView with Adapter
+                                     final MyCustomAdapter myadpter= new MyCustomAdapter(Items);
+                                     ls.setAdapter(myadpter);
+       } else {
+
+                                     Toast.makeText(Home.this, "اليوم "+s+" اللذي تم إختياره غير موجود حاليا !", Toast.LENGTH_SHORT).show();
+
+                                 }
+
+
+                             } catch (JSONException e) {
+                                 e.printStackTrace();
+                             }
+                         }
+
+                     });
+
+                 }
+
+             };
+    }
+
+    // Mtethodof Update text Date
     void updatedate(String date){
      EditText editText=  (EditText) findViewById(R.id.editText);
      editText.setText(date);
+
+
     }
+
+    // To change text time "HH:MM:SS" To tabl of int [HH,MM,SS]
+    public   int[] getTimeOfCalander(String h){
+        if (h!=null){
+            String[] tokens = h.split(":");       // Single blank is the separator.
+            int[] index = new int[tokens.length];
+            int i=0;
+            for (String val : tokens) {
+                index[i] =Integer.parseInt(val);
+                 i++;
+   }
+            return index;
+        }else{
+            Toast.makeText(this,"la reqet et vide ",Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
+
+
+
+
+// Class Adepter for ListItems Aw9at AL_Salat
+    class MyCustomAdapter extends BaseAdapter
+    {
+        ArrayList<ListItem> Items=new ArrayList<ListItem>();
+        MyCustomAdapter(ArrayList<ListItem> Items ) {
+            this.Items=Items;
+
+        }
+
+        @Override
+        public int getCount() {
+            return Items.size();
+        }
+
+        @Override
+        public String getItem(int position) {
+            return Items.get(position).date;
+
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return  position;
+        }
+
+        @Override
+        public View getView(final int in, View view, ViewGroup viewGroup) {
+
+            LayoutInflater linflater =getLayoutInflater();
+            View view1=linflater.inflate(R.layout.row_view, null);
+            final AlarmManager[] alarmManager = new AlarmManager[1];
+            final PendingIntent[] pendingIntentSALAT = new PendingIntent[1];
+            final TextView txtname =(TextView) view1.findViewById(R.id.nom);
+            final  TextView txthur =(TextView) view1.findViewById(R.id.h);
+            final ImageView imag =(ImageView) view1.findViewById(R.id.imageView);
+            final PendingIntent pendingIntent ;
+            final Switch Switchservice =(Switch) view1.findViewById(R.id.simpleSwitch);
+
+             txthur.setText( Items.get(in).h);
+            txtname.setText(Items.get(in).nom);
+            pendingIntent=Items.get(in).mNotificationReceiverPendingIntent;
+
+
+            // Action Listener Switch of Switchservice Off and On
+            Switchservice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()  {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+// Condition IF  Switchservice Checked ===> ON
+                    if (isChecked) {
+                        //To c"hange the text near to switch
+
+                        Switchservice.setText("On");
+                        imag.setImageResource(R.drawable.perm_group_device_alarms);
+
+                        Calendar calendar = Calendar.getInstance();
+                        //  calendar.setTimeInMillis(System.currentTimeMillis());
+                        int[] tab = getTimeOfCalander(Items.get(in).h);
+                        calendar.set(Calendar.HOUR_OF_DAY, tab[0]);
+                        calendar.set(Calendar.MINUTE, tab[1]);
+                        calendar.set(Calendar.SECOND, tab[2]);
+// Lanch  Servic ALARM ...
+                        // WITH RTC_WAKEUP
+                        mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                                calendar.getTimeInMillis(),
+                                pendingIntent);
+
+
+                        Toast.makeText(getApplicationContext(), "تفعيل وقت صلاة "+Items.get(in).nom+"\n على الساعة "+Items.get(in).h,
+                                Toast.LENGTH_LONG).show();
+                    }
+// Condition ELSE __ IF  Switchservice NO__Checked ===> OFF
+                    else {
+                        //To change the text near to switch
+                        Switchservice.setText("Off");
+                        imag.setImageResource(R.drawable.perm_group_system_clock);
+// Stoped  Servic ALARM ...
+                        // WITH RTC_WAKEUP
+                        mAlarmManager.cancel( pendingIntent);
+
+                        Toast.makeText(getApplicationContext(),
+                                "إزالة تفعيل وقت صلاة "+Items.get(in).nom+"\n على الساعة "+Items.get(in).h, Toast.LENGTH_LONG).show();
+
+
+                    }
+                }
+            });
+
+            return view1;
+
+        }
+
+    }
+
 
 
 }

@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">salate</string>
+    <string name="app_name">حيّ على الصلاة</string>
+
+    <string name="salat_notification_title_template"> %1$s : حان وقت الآذان </string>
+
+    <!-- TODO: remove this placeholder text -->
+    <string name="salat_notification_placeholder_text_template">   صلاة %1$s  تقبل اللّه صلاتك ومزيد من الاجر
+        و المغفرة و الثواب ,إنشاء اللّه  .</string>
+
+    <string name="action_share">Share</string>
+    <string name="action_reply">Reply</string>
 </resources>

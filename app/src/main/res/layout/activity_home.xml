@@ -11,50 +11,37 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right|center"
+        android:layout_weight="1"
+        android:background="@drawable/salat2"
+        android:gravity="top|right"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="125dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="horizontal">
+            android:background="@color/sfar"
+            android:ems="10"
+            android:hint="select date jour"
+            android:inputType="date"
+            android:onClick="getTime"
+            android:textColor="@color/colorAccent"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="125dp"
+            tools:layout_editor_absoluteY="44dp" />
+    </LinearLayout>
 
-            <Button
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="getTime"
-                android:text="select date"
-                tools:layout_editor_absoluteX="30dp"
-                tools:layout_editor_absoluteY="44dp" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:gravity="center"
+        android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="date"
-                android:onClick="getTime"
-                tools:layout_editor_absoluteX="125dp"
-                tools:layout_editor_absoluteY="44dp" />
-
-        </LinearLayout>
-
-        <Switch
-            android:id="@+id/simpleSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:checked="true"
-            android:gravity="center"
-            android:padding="40dp"
-            android:text="service"
-            android:textColor="#f00"
-            android:textOff="Off"
-            android:textOn="On"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

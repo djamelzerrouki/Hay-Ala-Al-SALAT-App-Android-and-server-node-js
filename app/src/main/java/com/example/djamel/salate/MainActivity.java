@@ -53,7 +53,7 @@ public static  boolean bool=false ;
         //  GetEmployees();
 
         try {
-            mSocket = IO.socket("http://192.168.1.107:3000");
+            mSocket = IO.socket("http://192.168.101.37:3000");
             Log.e("CONNECTED", "SUCCESS");
         } catch (URISyntaxException e) {
         }
