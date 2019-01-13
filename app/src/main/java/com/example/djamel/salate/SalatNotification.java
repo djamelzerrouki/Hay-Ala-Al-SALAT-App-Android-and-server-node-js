@@ -20,15 +20,12 @@ import android.support.v4.app.NotificationCompat;
  * This class makes heavy use of the {@link NotificationCompat.Builder} helper
  * class to create notifications in a backward-compatible way.
  */
-public class NotificationSalat {
+public class SalatNotification {
     /**
      * The unique identifier for this type of notification.
      */
     private static final String NOTIFICATION_TAG = "Salat";
 
-    private static final  Uri soundURI = Uri
-            .parse("android.resource://com.example.djamel.salate/"
-                    + R.raw.adhan);
     /**
      * Shows the notification, or updates a previously shown notification of
      * this type, with the given parameters.
@@ -48,9 +45,10 @@ public class NotificationSalat {
                               final String exampleString, final int number) {
         final Resources res = context.getResources();
 
-        // This image is used as the notification's large icon (thumbnail).
-        // TODO: Remove this if your notification has no relevant thumbnail.
-        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.salat);
+        // This image is used as the notification's large icon (thumbnail) when
+        // the notification is collapsed, and as the big picture to show when
+        // the notification is expanded.
+        final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.example_picture);
 
 
         final String ticker = exampleString;
@@ -63,8 +61,7 @@ public class NotificationSalat {
 
                 // Set appropriate defaults for the notification light, sound,
                 // and vibration.
-       .setDefaults(Notification.DEFAULT_ALL)
-
+                .setDefaults(Notification.DEFAULT_ALL)
 
                 // Set required fields, including the small icon, the
                 // notification title, and text.
@@ -104,13 +101,12 @@ public class NotificationSalat {
                         PendingIntent.getActivity(
                                 context,
                                 0,
-                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://10.0.2.2:3000/")),
+                                new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com")),
                                 PendingIntent.FLAG_UPDATE_CURRENT))
 
-                // Show expanded text content on devices running Android 4.1 or
+                // Show an expanded photo on devices running Android 4.1 or
                 // later.
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(text)
+                .setStyle(new NotificationCompat.BigPictureStyle().bigPicture(picture)
                         .setBigContentTitle(title)
                         .setSummaryText("Dummy summary text"))
 
@@ -136,7 +132,6 @@ public class NotificationSalat {
 
                 // Automatically dismiss the notification when it is touched.
                 .setAutoCancel(true);
-             //   .setSound(soundURI);
 
         notify(context, builder.build());
     }

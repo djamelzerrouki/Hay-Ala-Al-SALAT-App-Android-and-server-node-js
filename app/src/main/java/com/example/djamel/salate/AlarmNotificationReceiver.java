@@ -7,6 +7,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
@@ -37,6 +40,8 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 	@SuppressLint("LongLogTag")
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		final Resources res = context.getResources();
+		final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.salat);
 
 		mNotificationIntent = new Intent(context, Home.class);
   mContentIntent = PendingIntent.getActivity(context, 0,
@@ -57,7 +62,35 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 				.setContentText(contentText)
 				.setContentIntent(mContentIntent)
 				.setSound(soundURI)
-				.setVibrate(mVibratePattern);
+				 //
+				 .setLargeIcon(picture)
+
+				 .setVibrate(mVibratePattern)
+				 // Set the pending intent to be initiated when the user touches
+				 // the notification.
+				 .setContentIntent(
+						 PendingIntent.getActivity(
+								 context,
+								 0,
+								 new Intent(Intent.ACTION_VIEW, Uri.parse("http://10.0.2.2:3000/")),
+								 PendingIntent.FLAG_UPDATE_CURRENT))
+				 .addAction(
+						 R.drawable.ic_action_stat_share,
+						 res.getString(R.string.action_share),
+						 PendingIntent.getActivity(
+								 context,
+								 0,
+								 Intent.createChooser(new Intent(Intent.ACTION_SEND)
+										 .setType("text/plain")
+										 .putExtra(Intent.EXTRA_TEXT, "Dummy text"), "Dummy title"),
+								 PendingIntent.FLAG_UPDATE_CURRENT))
+				 .addAction(
+						 R.drawable.ic_action_stat_reply,
+						 res.getString(R.string.action_reply),
+						 null)
+
+				 // Automatically dismiss the notification when it is touched.
+				 .setAutoCancel(true);;
 		// Pass the Notification to the NotificationManager:
 		NotificationManager mNotificationManager = (NotificationManager) context
 				.getSystemService(Context.NOTIFICATION_SERVICE);

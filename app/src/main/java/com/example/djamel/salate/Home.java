@@ -74,13 +74,14 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
         // Create PendingIntent to start the AlarmNotificationReceiver
         mNotificationReceiverIntent = new Intent(Home.this,
                 AlarmNotificationReceiver.class);
-        try {
+      /*  try {
             // 169.254.135.165
             // 192.168.1.102
-            mSocket = IO.socket("http://192.168.101.37:3000");
+            mSocket = IO.socket("http://10.0.2.2:3000");
             Log.e("CONNECTED", "SUCCESS");
         } catch (URISyntaxException e) {
-        }
+        }*/
+        mSocket= ConnectionNodeJs.connectionNodeJs();
         //   Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 
         if (mSocket != null)

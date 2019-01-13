@@ -52,11 +52,13 @@ public static  boolean bool=false ;
         txt2 = (EditText) findViewById(R.id.userPassword);
         //  GetEmployees();
 
-        try {
-            mSocket = IO.socket("http://192.168.101.37:3000");
+      /*  try {
+            mSocket = IO.socket("http://10.0.2.2:3000");
             Log.e("CONNECTED", "SUCCESS");
         } catch (URISyntaxException e) {
-        }
+        }*/
+        mSocket= ConnectionNodeJs.connectionNodeJs();
+
         //   Toast.makeText(this, "", Toast.LENGTH_SHORT).show();
 
         if (mSocket != null)
