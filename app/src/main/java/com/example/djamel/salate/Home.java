@@ -258,7 +258,9 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
             Switchservice.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()  {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
+                  //  Bundle noBundle = new Bundle();
+                   // noBundle.putString("name", Items.get(in).nom);//This is the value I want to pass
+                  //  noReceive.putExtras(noBundle);
 // Condition IF  Switchservice Checked ===> ON
                     if (isChecked) {
                         //To c"hange the text near to switch
@@ -273,6 +275,7 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
                         calendar.set(Calendar.MINUTE, tab[1]);
                         calendar.set(Calendar.SECOND, tab[2]);
 // Lanch  Servic ALARM ...
+
                         // WITH RTC_WAKEUP
                         mAlarmManager.set(AlarmManager.RTC_WAKEUP,
                                 calendar.getTimeInMillis(),

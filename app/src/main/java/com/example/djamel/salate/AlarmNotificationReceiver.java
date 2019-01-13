@@ -14,18 +14,19 @@ import android.net.Uri;
 import android.util.Log;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class AlarmNotificationReceiver extends BroadcastReceiver {
 	// Notification ID to allow for future updates
 	private static final int MY_NOTIFICATION_ID = 1;
 	private static final String TAG = "AlarmNotificationReceiver";
-
-	// Notification Text Elements
+ 	// Notification Text Elements
 	private final CharSequence tickerText = "Are You Playing Angry Birds Again!";
 	private final CharSequence contentTitle = "حان وقت الآذان : ";
-	private final CharSequence contentText = "صلاة المغرب  تقبل اللّه صلاتك ومزيد من الاجر و المغفرة و الثواب ,إنشاء اللّه  ";
+
+// 	private final CharSequence contentTitle = DateFormat.getDateTimeInstance().format(new Date())+"حان وقت الآذان : ";
+	//صلاة المغرب
+	private final CharSequence contentText = " تقبل اللّه صلاتك ومزيد من الاجر و المغفرة و الثواب ,إنشاء اللّه  ";
 
 	// Notification Action Elements
 	private Intent mNotificationIntent;
@@ -46,8 +47,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 		mNotificationIntent = new Intent(context, Home.class);
   mContentIntent = PendingIntent.getActivity(context, 0,
 				mNotificationIntent,  PendingIntent.FLAG_UPDATE_CURRENT);
-
-		//NotificationSalat notificationSalat=new NotificationSalat();
+ 		//NotificationSalat notificationSalat=new NotificationSalat();
 
 	//	notificationSalat.notify( context, new Date()+" ",1234);
 		//  messageNotification.notify(context ,"rabeh cv ",134);
