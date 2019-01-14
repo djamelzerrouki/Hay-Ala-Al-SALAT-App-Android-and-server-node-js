@@ -74,7 +74,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 						 PendingIntent.getActivity(
 								 context,
 								 0,
-								 new Intent(Intent.ACTION_VIEW, Uri.parse("http://10.0.2.2:3000/")),
+								 new Intent(Intent.ACTION_VIEW, Uri.parse("http://10.0.2.2:3000/home")),
 								 PendingIntent.FLAG_UPDATE_CURRENT))
 				 .addAction(
 						 R.drawable.ic_action_stat_share,

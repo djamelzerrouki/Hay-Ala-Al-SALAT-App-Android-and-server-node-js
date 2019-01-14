@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -314,6 +317,28 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater=getMenuInflater();
+        inflater.inflate(R.menu.simpel_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }   @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id){
+            case R.id.item1:
+                Intent intentMap = new Intent(this, Second_Activity.class);
+                this.startActivity(intentMap);
+                Toast.makeText(getApplicationContext(),"لقد قمت باختيار المصحف الكريم",Toast.LENGTH_LONG).show();
 
+                return true;
+            case R.id.item2:
+                Toast.makeText(getApplicationContext(),"العوده الى الصفحه الرئيسيه",Toast.LENGTH_LONG).show();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
 }
