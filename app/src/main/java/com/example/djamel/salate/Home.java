@@ -150,14 +150,19 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
      //                                Items.add(new ListItem("الفجر",h1,"",PendingIntent.getBroadcast(
      //                                        Home.this, 0, mNotificationReceiverIntent, 0)));
      //
+                                     mNotificationReceiverIntent.putExtra("name","الفجر");
                                      Items.add(new ListItem("الفجر",h1,"",PendingIntent.getBroadcast(
                                              Home.this, 1, mNotificationReceiverIntent, 0)));
+                                     mNotificationReceiverIntent.putExtra("name","الظهر");
                                      Items.add(new ListItem("الظهر",h2,"",PendingIntent.getBroadcast(
                                              Home.this, 2, mNotificationReceiverIntent, 0)));
+                                     mNotificationReceiverIntent.putExtra("name","العصر");
                                      Items.add(new ListItem("العصر",h3,"",PendingIntent.getBroadcast(
                                              Home.this, 3, mNotificationReceiverIntent, 0)));
+                                     mNotificationReceiverIntent.putExtra("name","المغرب");
                                      Items.add(new ListItem("المغرب",h4,"",PendingIntent.getBroadcast(
                                              Home.this, 4, mNotificationReceiverIntent, 0)));
+                                     mNotificationReceiverIntent.putExtra("name","العشاء");
                                      Items.add(new ListItem("العشاء",h5,"",PendingIntent.getBroadcast(
                                              Home.this, 5, mNotificationReceiverIntent, 0)));
 
@@ -277,7 +282,8 @@ public static String h1=null,h2=null,h3=null,h4=null,h5=null;
 // Lanch  Servic ALARM ...
 
                         // WITH RTC_WAKEUP
-                        mAlarmManager.set(AlarmManager.RTC_WAKEUP,
+                      //  mNotificationReceiverIntent.putExtra("name","magreb");
+                         mAlarmManager.set(AlarmManager.RTC_WAKEUP,
                                 calendar.getTimeInMillis(),
                                 pendingIntent);
 

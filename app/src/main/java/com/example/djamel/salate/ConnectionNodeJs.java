@@ -26,7 +26,8 @@ public class ConnectionNodeJs {
            // mSocket = IO.socket("http://192.168.1.108:3000");
 //http://10.0.2.2:3000
             //http://192.168.1.109:3000
-            mSocket = IO.socket("http://192.168.1.100:3000");
+            //http://192.168.1.100:3000
+            mSocket = IO.socket("http://10.0.2.2:3000");
             Log.e("CONNECTED", "SUCCESS");
         } catch (URISyntaxException e) {
             Toast.makeText(null, "URISyntaxException", Toast.LENGTH_SHORT).show();
