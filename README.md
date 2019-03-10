@@ -10,4 +10,4 @@
 # image: 05
 ![alt text](https://github.com/djamelzerrouki/-App-Android-and-server-node-js/blob/master/image%20App%20salat/salat5.PNG)
 # image: 06
-![alt text](https://github.com/djamelzerrouki/-App-Android-and-server-node-js/blob/master/image%20App%20salat/salat6.PNG)
+![alt text](https://github.com/djamelzerrouki/-App-Android-and-server-node-js/blob/master/image%20App%20salat/sala6.PNG)
