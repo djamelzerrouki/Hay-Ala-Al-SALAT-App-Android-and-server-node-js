@@ -23,10 +23,10 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
     private static  String name ;
  	// Notification Text Elements
 	private final CharSequence tickerText = "Are You Playing Angry Birds Again!";
-	private final CharSequence contentTitle = "حان وقت الآذان : ";
 
 // 	private final CharSequence contentTitle = DateFormat.getDateTimeInstance().format(new Date())+"حان وقت الآذان : ";
 	//صلاة المغرب
+private final  CharSequence contentText = "تقبل اللّه صلاتك ومزيد من الاجر و المغفرة و الثواب ,إنشاء اللّه  ";
 
 	// Notification Action Elements
 	private Intent mNotificationIntent;
@@ -44,7 +44,7 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 		final Resources res = context.getResources();
 		final Bitmap picture = BitmapFactory.decodeResource(res, R.drawable.salat);
           name = intent.getExtras().getString("name");
-	 CharSequence contentText = "صلاة "+name+" :تقبل اللّه صلاتك ومزيد من الاجر و المغفرة و الثواب ,إنشاء اللّه  ";
+	CharSequence contentTitle = "حان وقت آذان : صلاة "+name;
 
 		mNotificationIntent = new Intent(context, Home.class);
   mContentIntent = PendingIntent.getActivity(context, 0,
